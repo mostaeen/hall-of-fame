@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import generic
 from .models import Hall, Video
 from django.urls import reverse_lazy
@@ -15,6 +15,11 @@ class CreateHallView(generic.CreateView):
     template_name = 'halls/create.html'
     fields = ['title']
     success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        super(CreateHallView, self).form_valid(form)
+        return redirect('home')
 
 
 class CreateVideoView(generic.CreateView):
